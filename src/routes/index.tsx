@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import opportunityBio from "@/assets/opportunity-bio.jpg";
 import opportunityTimber from "@/assets/opportunity-timber.jpg";
 
@@ -61,14 +62,17 @@ function Index() {
           </span>
           <div className="hidden gap-6 text-sm font-medium md:flex">
             <a href="#invest" className="transition-colors hover:text-muted-foreground">Invest</a>
-            <a href="#raise" className="transition-colors hover:text-muted-foreground">Raise</a>
-            <a href="#portfolio" className="transition-colors hover:text-muted-foreground">Portfolio</a>
+            <Link to="/raise" className="transition-colors hover:text-muted-foreground">Raise</Link>
+            <Link to="/portal" className="transition-colors hover:text-muted-foreground">Portfolio</Link>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex size-8 items-center justify-center rounded-full border border-border bg-surface text-[10px] font-bold">
-            JD
-          </div>
+          <Link
+            to="/auth"
+            className="rounded-sm border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface"
+          >
+            Sign in
+          </Link>
         </div>
       </nav>
 
@@ -83,12 +87,12 @@ function Index() {
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="rounded-sm bg-ink px-5 py-2.5 text-sm font-medium text-canvas transition-colors hover:opacity-90">
-              New Opportunity
-            </button>
-            <button className="rounded-sm border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface">
-              Export Data
-            </button>
+            <Link to="/raise" className="rounded-sm bg-ink px-5 py-2.5 text-sm font-medium text-canvas transition-colors hover:opacity-90">
+              New Inquiry
+            </Link>
+            <Link to="/portal" className="rounded-sm border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface">
+              Investor Portal
+            </Link>
           </div>
         </header>
 
@@ -193,9 +197,9 @@ function Index() {
               <p className="mb-4 text-xs leading-relaxed text-canvas/60">
                 Start your own fund or raise capital for your venture using mgx infrastructure.
               </p>
-              <button className="w-full bg-canvas py-2 text-xs font-bold uppercase tracking-wider text-ink">
+              <Link to="/raise" className="block w-full bg-canvas py-2 text-center text-xs font-bold uppercase tracking-wider text-ink">
                 Initialize Portal
-              </button>
+              </Link>
             </div>
           </aside>
         </div>
