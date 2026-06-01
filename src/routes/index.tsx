@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import opportunityBio from "@/assets/opportunity-bio.jpg";
 import opportunityTimber from "@/assets/opportunity-timber.jpg";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,6 +68,7 @@ function Index() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Link
             to="/auth"
             className="rounded-sm border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface"
