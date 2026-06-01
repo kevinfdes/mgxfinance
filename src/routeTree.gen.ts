@@ -9,12 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RequestAccessRouteImport } from './routes/request-access'
+import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRaiseRouteImport } from './routes/_authenticated.raise'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated.portal'
 
+const RequestAccessRoute = RequestAccessRouteImport.update({
+  id: '/request-access',
+  path: '/request-access',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MfaRoute = MfaRouteImport.update({
+  id: '/mfa',
+  path: '/mfa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -43,12 +55,16 @@ const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/mfa': typeof MfaRoute
+  '/request-access': typeof RequestAccessRoute
   '/portal': typeof AuthenticatedPortalRoute
   '/raise': typeof AuthenticatedRaiseRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/mfa': typeof MfaRoute
+  '/request-access': typeof RequestAccessRoute
   '/portal': typeof AuthenticatedPortalRoute
   '/raise': typeof AuthenticatedRaiseRoute
 }
@@ -57,19 +73,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/mfa': typeof MfaRoute
+  '/request-access': typeof RequestAccessRoute
   '/_authenticated/portal': typeof AuthenticatedPortalRoute
   '/_authenticated/raise': typeof AuthenticatedRaiseRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/portal' | '/raise'
+  fullPaths: '/' | '/auth' | '/mfa' | '/request-access' | '/portal' | '/raise'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/portal' | '/raise'
+  to: '/' | '/auth' | '/mfa' | '/request-access' | '/portal' | '/raise'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/mfa'
+    | '/request-access'
     | '/_authenticated/portal'
     | '/_authenticated/raise'
   fileRoutesById: FileRoutesById
@@ -78,10 +98,26 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  MfaRoute: typeof MfaRoute
+  RequestAccessRoute: typeof RequestAccessRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/request-access': {
+      id: '/request-access'
+      path: '/request-access'
+      fullPath: '/request-access'
+      preLoaderRoute: typeof RequestAccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mfa': {
+      id: '/mfa'
+      path: '/mfa'
+      fullPath: '/mfa'
+      preLoaderRoute: typeof MfaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -138,7 +174,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  MfaRoute: MfaRoute,
+  RequestAccessRoute: RequestAccessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
