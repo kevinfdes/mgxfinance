@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "magellanX — Precision Capital Management" },
+      { name: "description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
+      { name: "author", content: "magellanX" },
+      { property: "og:title", content: "magellanX — Precision Capital Management" },
+      { property: "og:description", content: "Raise, invest, and track your portfolio with quiet precision." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@magellanX" },
     ],
     links: [
       {
