@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -10,12 +10,40 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
+  const [aalChecked, setAalChecked] = useState(false);
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/auth", replace: true });
   }, [loading, session, navigate]);
 
-  if (loading || !session) {
+  useEffect(() => {
+    if (loading || !session) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (cancelled) return;
+      if (error) {
+        setAalChecked(true);
+        return;
+      }
+      // Require aal2 (verified TOTP) for every authenticated route.
+      if (data?.nextLevel === "aal2" && data?.currentLevel !== "aal2") {
+        navigate({ to: "/mfa", replace: true });
+        return;
+      }
+      // No factor enrolled yet → force enrollment.
+      if (data?.nextLevel !== "aal2") {
+        navigate({ to: "/mfa", replace: true });
+        return;
+      }
+      setAalChecked(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, session, navigate]);
+
+  if (loading || !session || !aalChecked) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-canvas text-sm text-muted-foreground">
         Loading portal…
