@@ -83,10 +83,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
       { name: "author", content: "magellanX" },
       { property: "og:title", content: "magellanX — Precision Capital Management" },
-      { property: "og:description", content: "Raise, invest, and track your portfolio with quiet precision." },
+      { property: "og:description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@magellanX" },
+      { name: "twitter:title", content: "magellanX — Precision Capital Management" },
+      { name: "twitter:description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bd267466-40b1-4f38-9340-01f94cb591da/id-preview-c490b779--5d109927-8354-42dc-939f-072950d71189.lovable.app-1780344319999.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bd267466-40b1-4f38-9340-01f94cb591da/id-preview-c490b779--5d109927-8354-42dc-939f-072950d71189.lovable.app-1780344319999.png" },
     ],
     links: [
       {
