@@ -14,7 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      investment_inquiries: {
+        Row: {
+          amount_cents: number
+          contact_phone: string | null
+          created_at: string
+          id: string
+          message: string | null
+          opportunity_name: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          status: Database["public"]["Enums"]["inquiry_status"]
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          opportunity_name: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          opportunity_name?: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +88,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      inquiry_status:
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "funded"
+      payment_status: "pending" | "paid" | "refunded"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +221,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      inquiry_status: [
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "funded",
+      ],
+      payment_status: ["pending", "paid", "refunded"],
+    },
   },
 } as const
