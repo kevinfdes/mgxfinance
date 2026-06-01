@@ -10,7 +10,7 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — magellanX" },
-      { name: "description", content: "Access your magellanX investor portal." },
+      { name: "description", content: "Sign in to the magellanX investor portal. Accounts are by approval only." },
     ],
   }),
   component: AuthPage,
@@ -19,16 +19,13 @@ export const Route = createFileRoute("/auth")({
 const schema = z.object({
   email: z.string().trim().email("Enter a valid email").max(255),
   password: z.string().min(8, "At least 8 characters").max(72),
-  fullName: z.string().trim().min(1).max(100).optional(),
 });
 
 function AuthPage() {
   const navigate = useNavigate();
   const { session } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -37,32 +34,19 @@ function AuthPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = schema.safeParse({ email, password, fullName: mode === "signup" ? fullName : undefined });
+    const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email: parsed.data.email,
-          password: parsed.data.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/portal`,
-            data: { full_name: parsed.data.fullName },
-          },
-        });
-        if (error) throw error;
-        toast.success("Check your email to confirm your account.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: parsed.data.email,
-          password: parsed.data.password,
-        });
-        if (error) throw error;
-        toast.success("Signed in.");
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: parsed.data.email,
+        password: parsed.data.password,
+      });
+      if (error) throw error;
+      toast.success("Signed in. Verify your authenticator next.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
     } finally {
@@ -70,15 +54,15 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
+  async function handleOAuth(provider: "google" | "apple") {
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
+      const result = await lovable.auth.signInWithOAuth(provider, {
         redirect_uri: `${window.location.origin}/portal`,
       });
       if (result.error) throw result.error;
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Google sign-in failed");
+      toast.error(err instanceof Error ? err.message : "Sign-in failed");
       setBusy(false);
     }
   }
@@ -92,23 +76,29 @@ function AuthPage() {
       </header>
 
       <main className="mx-auto flex max-w-md flex-col px-6 py-16">
-        <h1 className="mb-2 font-display text-3xl font-bold tracking-tight">
-          {mode === "signin" ? "Sign in." : "Create account."}
-        </h1>
+        <h1 className="mb-2 font-display text-3xl font-bold tracking-tight">Sign in.</h1>
         <p className="mb-10 text-sm text-muted-foreground">
-          {mode === "signin"
-            ? "Access your portal to track inquiries and investments."
-            : "Set up an investor profile to begin allocating capital."}
+          Access is by approval only. Sign in with an approved account, or request access below.
         </p>
 
-        <button
-          type="button"
-          onClick={handleGoogle}
-          disabled={busy}
-          className="mb-4 w-full rounded-sm border border-border bg-canvas px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface disabled:opacity-50"
-        >
-          Continue with Google
-        </button>
+        <div className="mb-4 space-y-2">
+          <button
+            type="button"
+            onClick={() => handleOAuth("google")}
+            disabled={busy}
+            className="w-full rounded-sm border border-border bg-canvas px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface disabled:opacity-50"
+          >
+            Continue with Google
+          </button>
+          <button
+            type="button"
+            onClick={() => handleOAuth("apple")}
+            disabled={busy}
+            className="w-full rounded-sm border border-border bg-ink px-4 py-2.5 text-sm font-medium text-canvas transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            Continue with Apple
+          </button>
+        </div>
 
         <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
           <div className="h-px flex-1 bg-border" />
@@ -117,21 +107,6 @@ function AuthPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === "signup" && (
-            <div>
-              <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Full name
-              </label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="w-full rounded-sm border border-border bg-canvas px-3 py-2 text-sm outline-none focus:border-ink"
-                required
-                maxLength={100}
-              />
-            </div>
-          )}
           <div>
             <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               Email
@@ -165,17 +140,20 @@ function AuthPage() {
             disabled={busy}
             className="w-full rounded-sm bg-ink px-4 py-2.5 text-sm font-medium text-canvas transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+            {busy ? "Please wait…" : "Sign in"}
           </button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-6 text-xs text-muted-foreground underline"
-        >
-          {mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in"}
-        </button>
+        <p className="mt-8 text-xs text-muted-foreground">
+          Two-factor authentication is required. Use Google Authenticator or Microsoft Authenticator.
+        </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Don&rsquo;t have an account?{" "}
+          <Link to="/request-access" className="underline">
+            Request access
+          </Link>
+          .
+        </p>
       </main>
     </div>
   );
