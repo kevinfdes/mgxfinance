@@ -68,6 +68,7 @@ function Index() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Link
             to="/auth"
             className="rounded-sm border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface"
