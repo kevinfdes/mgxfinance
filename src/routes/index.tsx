@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import opportunityBio from "@/assets/opportunity-bio.jpg";
 import opportunityTimber from "@/assets/opportunity-timber.jpg";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteHeader } from "@/components/site-header";
 import {
   Dialog,
   DialogContent,
@@ -100,27 +100,7 @@ const holdings = [
 function Index() {
   return (
     <div className="min-h-screen bg-canvas font-sans text-ink selection:bg-ink selection:text-canvas">
-      <nav className="flex items-center justify-between border-b border-border px-6 py-4">
-        <div className="flex items-center gap-8">
-          <span className="font-display text-xl font-bold tracking-tight">
-            magellan<span className="font-medium text-muted-foreground">X</span>
-          </span>
-          <div className="hidden gap-6 text-sm font-medium md:flex">
-            <a href="#invest" className="transition-colors hover:text-muted-foreground">Invest</a>
-            <Link to="/raise" className="transition-colors hover:text-muted-foreground">Raise</Link>
-            <Link to="/portal" className="transition-colors hover:text-muted-foreground">Portfolio</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <Link
-            to="/auth"
-            className="rounded-sm border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface"
-          >
-            Sign in
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader />
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <header className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
