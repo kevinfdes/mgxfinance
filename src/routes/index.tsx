@@ -3,6 +3,14 @@ import { Link } from "@tanstack/react-router";
 import opportunityBio from "@/assets/opportunity-bio.jpg";
 import opportunityTimber from "@/assets/opportunity-timber.jpg";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,6 +32,12 @@ type Opportunity = {
   goal: string;
   progress: number;
   image: string;
+  details: {
+    overview: string;
+    thesis: string;
+    terms: { label: string; value: string }[];
+    risks: string;
+  };
 };
 
 const opportunities: Opportunity[] = [
@@ -35,6 +49,21 @@ const opportunities: Opportunity[] = [
     goal: "$2M",
     progress: 22.5,
     image: opportunityBio,
+    details: {
+      overview:
+        "Aether Bio Labs is a clinical-stage biotech advancing a portfolio of small-molecule enzyme inhibitors targeting idiopathic pulmonary fibrosis and rare interstitial lung diseases. The lead asset AET-204 has completed Phase Ib with a favorable safety profile and early signals of reduced fibrotic progression.",
+      thesis:
+        "The pulmonary fibrosis market exceeds $4.5B with only two approved therapies, both showing modest efficacy and tolerability issues. Aether's selective inhibition mechanism aims to deliver superior outcomes with oral once-daily dosing — a meaningful clinical and commercial differentiator.",
+      terms: [
+        { label: "Instrument", value: "Preferred Equity" },
+        { label: "Round Size", value: "$2,000,000" },
+        { label: "Minimum Ticket", value: "$25,000" },
+        { label: "Valuation Cap", value: "$28M post-money" },
+        { label: "Expected Horizon", value: "5–7 years" },
+      ],
+      risks:
+        "Clinical-stage biotech carries binary trial risk, regulatory uncertainty, and potential dilution in future rounds. Capital should be considered illiquid and at risk of total loss.",
+    },
   },
   {
     title: "Vertical Timber II",
@@ -44,6 +73,21 @@ const opportunities: Opportunity[] = [
     goal: "$5M",
     progress: 22,
     image: opportunityTimber,
+    details: {
+      overview:
+        "Vertical Timber II is a senior-secured private debt facility funding the second phase of a mass-timber residential development on the outskirts of Stockholm. The project comprises 184 units across four CLT-frame buildings, pre-leased to 62% under a long-term institutional rental agreement.",
+      thesis:
+        "Cross-laminated timber construction reduces embodied carbon by ~60% versus reinforced concrete while accelerating build timelines. The Nordic rental market remains structurally supply-constrained, supporting durable cash flows and conservative loan-to-cost.",
+      terms: [
+        { label: "Instrument", value: "Senior Secured Debt" },
+        { label: "Facility Size", value: "$5,000,000" },
+        { label: "Minimum Ticket", value: "$50,000" },
+        { label: "Coupon", value: "9.25% p.a. paid quarterly" },
+        { label: "Tenor", value: "36 months bullet" },
+      ],
+      risks:
+        "Real estate development is exposed to construction delays, cost overruns, and rental absorption risk. Collateral is first-lien on the underlying assets, but recovery is not guaranteed.",
+    },
   },
 ];
 
@@ -122,36 +166,118 @@ function Index() {
             </div>
 
             {opportunities.map((o) => (
-              <article key={o.title} className="group cursor-pointer">
-                <div className="mb-6 aspect-[21/9] w-full overflow-hidden rounded-sm bg-surface outline outline-1 -outline-offset-1 outline-black/5">
-                  <img
-                    src={o.image}
-                    alt={o.title}
-                    loading="lazy"
-                    width={1280}
-                    height={640}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                  />
-                </div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <Dialog key={o.title}>
+                <DialogTrigger asChild>
+                  <article className="group w-full cursor-pointer text-left">
+                    <div className="mb-6 aspect-[21/9] w-full overflow-hidden rounded-sm bg-surface outline outline-1 -outline-offset-1 outline-black/5">
+                      <img
+                        src={o.image}
+                        alt={o.title}
+                        loading="lazy"
+                        width={1280}
+                        height={640}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                      />
+                    </div>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                          {o.category}
+                        </p>
+                        <h3 className="mb-1 font-display text-xl font-bold">{o.title}</h3>
+                        <p className="max-w-md text-sm text-muted-foreground">{o.description}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-display font-bold">{o.raised}</p>
+                        <p className="text-[10px] uppercase tracking-tight text-muted-foreground">
+                          Raised of {o.goal}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface">
+                      <div className="h-full bg-ink" style={{ width: `${o.progress}%` }} />
+                    </div>
+                  </article>
+                </DialogTrigger>
+                <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+                  <DialogHeader>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
                       {o.category}
                     </p>
-                    <h3 className="mb-1 font-display text-xl font-bold">{o.title}</h3>
-                    <p className="max-w-md text-sm text-muted-foreground">{o.description}</p>
+                    <DialogTitle className="font-display text-2xl font-bold">{o.title}</DialogTitle>
+                    <DialogDescription className="text-sm">{o.description}</DialogDescription>
+                  </DialogHeader>
+
+                  <div className="aspect-[21/9] w-full overflow-hidden rounded-sm bg-surface">
+                    <img src={o.image} alt={o.title} className="h-full w-full object-cover" />
                   </div>
-                  <div className="text-right">
-                    <p className="font-display font-bold">{o.raised}</p>
-                    <p className="text-[10px] uppercase tracking-tight text-muted-foreground">
-                      Raised of {o.goal}
-                    </p>
+
+                  <div className="space-y-5">
+                    <section>
+                      <h4 className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Overview
+                      </h4>
+                      <p className="text-sm leading-relaxed">{o.details.overview}</p>
+                    </section>
+
+                    <section>
+                      <h4 className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Investment Thesis
+                      </h4>
+                      <p className="text-sm leading-relaxed">{o.details.thesis}</p>
+                    </section>
+
+                    <section>
+                      <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Key Terms
+                      </h4>
+                      <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        {o.details.terms.map((t) => (
+                          <div key={t.label} className="flex justify-between rounded-sm border border-border px-3 py-2">
+                            <dt className="text-xs text-muted-foreground">{t.label}</dt>
+                            <dd className="text-xs font-medium">{t.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </section>
+
+                    <section>
+                      <h4 className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Raise Progress
+                      </h4>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-medium">{o.raised} raised</span>
+                        <span className="text-muted-foreground">Target {o.goal}</span>
+                      </div>
+                      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-surface">
+                        <div className="h-full bg-ink" style={{ width: `${o.progress}%` }} />
+                      </div>
+                    </section>
+
+                    <section>
+                      <h4 className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                        Risks
+                      </h4>
+                      <p className="text-sm leading-relaxed text-muted-foreground">{o.details.risks}</p>
+                    </section>
+
+                    <div className="flex gap-3 pt-2">
+                      <Link
+                        to="/auth"
+                        className="flex-1 rounded-sm bg-ink px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-canvas transition-opacity hover:opacity-90"
+                      >
+                        Request Allocation
+                      </Link>
+                      <Link
+                        to="/portal"
+                        className="flex-1 rounded-sm border border-border px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider transition-colors hover:bg-surface"
+                      >
+                        View in Portal
+                      </Link>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface">
-                  <div className="h-full bg-ink" style={{ width: `${o.progress}%` }} />
-                </div>
-              </article>
+                </DialogContent>
+              </Dialog>
             ))}
           </section>
 
