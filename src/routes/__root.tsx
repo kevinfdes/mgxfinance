@@ -82,6 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "magellanX — Precision Capital Management" },
       { name: "description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
       { name: "author", content: "magellanX" },
+      { name: "google-site-verification", content: "_1F6MjTEmLGrm-6P-YaqS6-_oJWDt3MSxg1cP6D6hm4" },
       { property: "og:title", content: "magellanX — Precision Capital Management" },
       { property: "og:description", content: "magellanX (mgx) is a pragmatic interface for raising funds, investing, and tracking personal portfolio performance." },
       { property: "og:type", content: "website" },
