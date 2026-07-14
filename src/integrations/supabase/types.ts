@@ -89,6 +89,48 @@ export type Database = {
         }
         Relationships: []
       }
+      pluggy_items: {
+        Row: {
+          connector_id: number | null
+          connector_image_url: string | null
+          connector_name: string | null
+          created_at: string
+          execution_status: string | null
+          id: string
+          item_id: string
+          last_synced_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connector_id?: number | null
+          connector_image_url?: string | null
+          connector_name?: string | null
+          created_at?: string
+          execution_status?: string | null
+          id?: string
+          item_id: string
+          last_synced_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connector_id?: number | null
+          connector_image_url?: string | null
+          connector_name?: string | null
+          created_at?: string
+          execution_status?: string | null
+          id?: string
+          item_id?: string
+          last_synced_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
