@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mgxfinance.lovable.app/sitemap.xml
