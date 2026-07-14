@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Wallet, CreditCard, LineChart, ArrowRightLeft, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Wallet, CreditCard, LineChart, ArrowRightLeft, Settings, LogOut, Globe } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,6 +20,7 @@ const nav = [
   { title: "Cards", url: "/portal", icon: CreditCard, hash: "cards" },
   { title: "Investments", url: "/portal", icon: LineChart, hash: "investments" },
   { title: "Cash flow", url: "/portal", icon: ArrowRightLeft, hash: "cashflow" },
+  { title: "Open Finance", url: "/open-finance", icon: Globe },
 ];
 
 export function AppSidebar() {

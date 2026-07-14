@@ -17,6 +17,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRaiseRouteImport } from './routes/_authenticated.raise'
 import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated.portal'
+import { Route as AuthenticatedOpenFinanceRouteImport } from './routes/_authenticated.open-finance'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -57,6 +58,12 @@ const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
   path: '/portal',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedOpenFinanceRoute =
+  AuthenticatedOpenFinanceRouteImport.update({
+    id: '/open-finance',
+    path: '/open-finance',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/mfa': typeof MfaRoute
   '/request-access': typeof RequestAccessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/open-finance': typeof AuthenticatedOpenFinanceRoute
   '/portal': typeof AuthenticatedPortalRoute
   '/raise': typeof AuthenticatedRaiseRoute
 }
@@ -73,6 +81,7 @@ export interface FileRoutesByTo {
   '/mfa': typeof MfaRoute
   '/request-access': typeof RequestAccessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/open-finance': typeof AuthenticatedOpenFinanceRoute
   '/portal': typeof AuthenticatedPortalRoute
   '/raise': typeof AuthenticatedRaiseRoute
 }
@@ -84,6 +93,7 @@ export interface FileRoutesById {
   '/mfa': typeof MfaRoute
   '/request-access': typeof RequestAccessRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/open-finance': typeof AuthenticatedOpenFinanceRoute
   '/_authenticated/portal': typeof AuthenticatedPortalRoute
   '/_authenticated/raise': typeof AuthenticatedRaiseRoute
 }
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/request-access'
     | '/sitemap.xml'
+    | '/open-finance'
     | '/portal'
     | '/raise'
   fileRoutesByTo: FileRoutesByTo
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/request-access'
     | '/sitemap.xml'
+    | '/open-finance'
     | '/portal'
     | '/raise'
   id:
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/request-access'
     | '/sitemap.xml'
+    | '/_authenticated/open-finance'
     | '/_authenticated/portal'
     | '/_authenticated/raise'
   fileRoutesById: FileRoutesById
@@ -185,15 +198,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/open-finance': {
+      id: '/_authenticated/open-finance'
+      path: '/open-finance'
+      fullPath: '/open-finance'
+      preLoaderRoute: typeof AuthenticatedOpenFinanceRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedOpenFinanceRoute: typeof AuthenticatedOpenFinanceRoute
   AuthenticatedPortalRoute: typeof AuthenticatedPortalRoute
   AuthenticatedRaiseRoute: typeof AuthenticatedRaiseRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedOpenFinanceRoute: AuthenticatedOpenFinanceRoute,
   AuthenticatedPortalRoute: AuthenticatedPortalRoute,
   AuthenticatedRaiseRoute: AuthenticatedRaiseRoute,
 }
